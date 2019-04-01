@@ -14,7 +14,8 @@ RUN apk add --no-cache openssl
 # Export HTTP & Transport
 EXPOSE 9200 9300
 
-ENV ES_VERSION 6.4.1
+ENV ES_VERSION 6.4.3
+ENV SG_VERSION 24.2
 
 ENV DOWNLOAD_URL "https://artifacts.elastic.co/downloads/elasticsearch"
 ENV ES_TARBAL "${DOWNLOAD_URL}/elasticsearch-${ES_VERSION}.tar.gz"
@@ -23,6 +24,7 @@ ENV GPG_KEY "46095ACC8548582C1A2699A9D27D666CD88E42B4"
 
 # Install Elasticsearch.
 RUN apk add --no-cache --update bash ca-certificates su-exec util-linux curl
+RUN apk add --no-cache nss
 RUN apk add --no-cache -t .build-deps gnupg openssl \
     && cd /tmp \
     && echo "===> Install Elasticsearch..." \
@@ -85,13 +87,13 @@ COPY /misc/wait_until_started.sh /
 COPY run.sh /
 
 # Install search-guard-6
-RUN ./bin/elasticsearch-plugin install -b com.floragunn:search-guard-6:6.4.1-23.1
+RUN ./bin/elasticsearch-plugin install -b com.floragunn:search-guard-6:${ES_VERSION}-${SG_VERSION}
 
 # Install s3 repository plugin
 RUN ./bin/elasticsearch-plugin install repository-s3 --batch
 
 # Install prometheus plugin
-RUN ./bin/elasticsearch-plugin install --batch https://github.com/vvanholl/elasticsearch-prometheus-exporter/releases/download/6.4.1.0/elasticsearch-prometheus-exporter-6.4.1.0.zip
+RUN ./bin/elasticsearch-plugin install --batch https://github.com/vvanholl/elasticsearch-prometheus-exporter/releases/download/${ES_VERSION}.0/prometheus-exporter-${ES_VERSION}.0.zip
 
 # Volume for Elasticsearch data
 VOLUME ["/data"]
