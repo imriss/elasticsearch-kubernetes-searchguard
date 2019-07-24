@@ -48,12 +48,12 @@ searchguard:
       pemcert_filepath: certs/node.pem
       pemtrustedcas_filepath: certs/ca.pem
       enforce_hostname_verification: false
-      enabled: ${SEARCHGUARD_SSL_TRANSPORT_ENABLED}
+      enabled: true # ${SEARCHGUARD_SSL_TRANSPORT_ENABLED}
     http:
       pemkey_filepath: certs/node-key.pkcs8.pem
       pemcert_filepath: certs/node.pem
       pemtrustedcas_filepath: certs/ca.pem
-      enabled: ${SEARCHGUARD_SSL_HTTP_ENABLED}
+      enabled: true # ${SEARCHGUARD_SSL_HTTP_ENABLED}
 
 metrics:
   statsd:
